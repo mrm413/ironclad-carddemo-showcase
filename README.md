@@ -232,4 +232,8 @@ The `cobol-runtime` crate provides a production-grade CICS runtime:
 
 ## License
 
-MIT
+Licensed under the [Apache License, Version 2.0](LICENSE).
+
+The original CardDemo application is provided by AWS under the [MIT-0 License](https://github.com/aws-samples/aws-mainframe-modernization-carddemo/blob/main/LICENSE).
+
+All modifications and additions -- including the Rust transpiled programs, the CICS runtime library, the React 3270 terminal UI, the build system, and test suite -- are Copyright 2025 Michael R. Mull / Lazarus Systems. See [NOTICE](NOTICE) for details.

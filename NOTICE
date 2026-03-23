@@ -1,0 +1,35 @@
+Ironclad CardDemo Showcase
+Copyright 2025 Michael R. Mull / Lazarus Systems
+
+This product includes software developed by Lazarus Systems (https://lazarus-systems.com).
+
+================================================================================
+
+Original Work:
+  AWS CardDemo - AWS Mainframe Modernization Reference Application
+  https://github.com/aws-samples/aws-mainframe-modernization-carddemo
+  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  Licensed under the MIT-0 License.
+
+================================================================================
+
+Modifications and Derivative Works by Michael R. Mull / Lazarus Systems:
+
+  The following components are original works created by Lazarus Systems and
+  constitute Derivative Works under the Apache License 2.0:
+
+  1. COBOL-to-Rust Transpilation (programs/)
+     - All transpiled Rust files are the output of the Ironclad transpiler
+       applied to the original AWS CardDemo COBOL source code
+
+  2. Rust CICS Runtime Library (cobol-runtime/)
+     - Complete CICS runtime implementation in Rust
+     - VSAM storage, BMS screen engine, CICS context, SQL context
+     - Transaction loop, web server, React 3270 terminal UI
+     - Full test suite
+
+  3. Build System and Integration
+     - Cargo build configuration, program registry, test harness
+
+All modifications and additions listed above are Copyright 2025 Michael R. Mull /
+Lazarus Systems, licensed under the Apache License, Version 2.0.
