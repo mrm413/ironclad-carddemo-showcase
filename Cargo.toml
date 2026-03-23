@@ -1,186 +1,186 @@
 [package]
 name = "carddemo-ironclad"
-version = "1.0.0"
+version = "0.1.0"
 edition = "2021"
-description = "AWS CardDemo CICS/COBOL transpiled to Rust by Ironclad — 44/44 programs, 100% compile"
+description = "AWS CardDemo CICS/COBOL transpiled to Rust by Ironclad"
 authors = ["Torsova LLC"]
-license = "MIT"
 
 [dependencies]
 cobol-runtime = { path = "cobol-runtime" }
 
 [[bin]]
 name = "cbact01c"
-path = "src/CBACT01C.rs"
+path = "rust_output/CBACT01C.rs"
 
 [[bin]]
 name = "cbact02c"
-path = "src/CBACT02C.rs"
+path = "rust_output/CBACT02C.rs"
 
 [[bin]]
 name = "cbact03c"
-path = "src/CBACT03C.rs"
+path = "rust_output/CBACT03C.rs"
 
 [[bin]]
 name = "cbact04c"
-path = "src/CBACT04C.rs"
+path = "rust_output/CBACT04C.rs"
 
 [[bin]]
 name = "cbcus01c"
-path = "src/CBCUS01C.rs"
+path = "rust_output/CBCUS01C.rs"
 
 [[bin]]
 name = "cbexport"
-path = "src/CBEXPORT.rs"
+path = "rust_output/CBEXPORT.rs"
 
 [[bin]]
 name = "cbimport"
-path = "src/CBIMPORT.rs"
+path = "rust_output/CBIMPORT.rs"
 
 [[bin]]
 name = "cbpaup0c"
-path = "src/CBPAUP0C.rs"
+path = "rust_output/CBPAUP0C.rs"
 
 [[bin]]
 name = "cbstm03a"
-path = "src/CBSTM03A.rs"
+path = "rust_output/CBSTM03A.rs"
 
 [[bin]]
 name = "cbstm03b"
-path = "src/CBSTM03B.rs"
+path = "rust_output/CBSTM03B.rs"
 
 [[bin]]
 name = "cbtrn01c"
-path = "src/CBTRN01C.rs"
+path = "rust_output/CBTRN01C.rs"
 
 [[bin]]
 name = "cbtrn02c"
-path = "src/CBTRN02C.rs"
+path = "rust_output/CBTRN02C.rs"
 
 [[bin]]
 name = "cbtrn03c"
-path = "src/CBTRN03C.rs"
+path = "rust_output/CBTRN03C.rs"
 
 [[bin]]
 name = "coacct01"
-path = "src/COACCT01.rs"
+path = "rust_output/COACCT01.rs"
 
 [[bin]]
 name = "coactupc"
-path = "src/COACTUPC.rs"
+path = "rust_output/COACTUPC.rs"
 
 [[bin]]
 name = "coactvwc"
-path = "src/COACTVWC.rs"
+path = "rust_output/COACTVWC.rs"
 
 [[bin]]
 name = "coadm01c"
-path = "src/COADM01C.rs"
+path = "rust_output/COADM01C.rs"
 
 [[bin]]
 name = "cobil00c"
-path = "src/COBIL00C.rs"
+path = "rust_output/COBIL00C.rs"
 
 [[bin]]
 name = "cobswait"
-path = "src/COBSWAIT.rs"
+path = "rust_output/COBSWAIT.rs"
 
 [[bin]]
 name = "cobtupdt"
-path = "src/COBTUPDT.rs"
+path = "rust_output/COBTUPDT.rs"
 
 [[bin]]
 name = "cocrdlic"
-path = "src/COCRDLIC.rs"
+path = "rust_output/COCRDLIC.rs"
 
 [[bin]]
 name = "cocrdslc"
-path = "src/COCRDSLC.rs"
+path = "rust_output/COCRDSLC.rs"
 
 [[bin]]
 name = "cocrdupc"
-path = "src/COCRDUPC.rs"
+path = "rust_output/COCRDUPC.rs"
 
 [[bin]]
 name = "codate01"
-path = "src/CODATE01.rs"
+path = "rust_output/CODATE01.rs"
 
 [[bin]]
 name = "comen01c"
-path = "src/COMEN01C.rs"
+path = "rust_output/COMEN01C.rs"
 
 [[bin]]
 name = "copaua0c"
-path = "src/COPAUA0C.rs"
+path = "rust_output/COPAUA0C.rs"
 
 [[bin]]
 name = "copaus0c"
-path = "src/COPAUS0C.rs"
+path = "rust_output/COPAUS0C.rs"
 
 [[bin]]
 name = "copaus1c"
-path = "src/COPAUS1C.rs"
+path = "rust_output/COPAUS1C.rs"
 
 [[bin]]
 name = "copaus2c"
-path = "src/COPAUS2C.rs"
+path = "rust_output/COPAUS2C.rs"
 
 [[bin]]
 name = "corpt00c"
-path = "src/CORPT00C.rs"
+path = "rust_output/CORPT00C.rs"
 
 [[bin]]
 name = "cosgn00c"
-path = "src/COSGN00C.rs"
+path = "rust_output/COSGN00C.rs"
 
 [[bin]]
 name = "cotrn00c"
-path = "src/COTRN00C.rs"
+path = "rust_output/COTRN00C.rs"
 
 [[bin]]
 name = "cotrn01c"
-path = "src/COTRN01C.rs"
+path = "rust_output/COTRN01C.rs"
 
 [[bin]]
 name = "cotrn02c"
-path = "src/COTRN02C.rs"
+path = "rust_output/COTRN02C.rs"
 
 [[bin]]
 name = "cotrtlic"
-path = "src/COTRTLIC.rs"
+path = "rust_output/COTRTLIC.rs"
 
 [[bin]]
 name = "cotrtupc"
-path = "src/COTRTUPC.rs"
+path = "rust_output/COTRTUPC.rs"
 
 [[bin]]
 name = "cousr00c"
-path = "src/COUSR00C.rs"
+path = "rust_output/COUSR00C.rs"
 
 [[bin]]
 name = "cousr01c"
-path = "src/COUSR01C.rs"
+path = "rust_output/COUSR01C.rs"
 
 [[bin]]
 name = "cousr02c"
-path = "src/COUSR02C.rs"
+path = "rust_output/COUSR02C.rs"
 
 [[bin]]
 name = "cousr03c"
-path = "src/COUSR03C.rs"
+path = "rust_output/COUSR03C.rs"
 
 [[bin]]
 name = "csutldtc"
-path = "src/CSUTLDTC.rs"
+path = "rust_output/CSUTLDTC.rs"
 
 [[bin]]
 name = "dbunldgs"
-path = "src/DBUNLDGS.rs"
+path = "rust_output/DBUNLDGS.rs"
 
 [[bin]]
 name = "paudblod"
-path = "src/PAUDBLOD.rs"
+path = "rust_output/PAUDBLOD.rs"
 
 [[bin]]
 name = "paudbunl"
-path = "src/PAUDBUNL.rs"
+path = "rust_output/PAUDBUNL.rs"
+

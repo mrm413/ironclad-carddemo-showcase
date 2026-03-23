@@ -10,10 +10,16 @@ pub mod chrono_shim;
 pub mod ebcdic;
 pub mod edited_numeric;
 pub mod string_ops;
+pub mod vsam;
+pub mod bms;
 pub mod cics;
 pub mod sql;
 pub mod dli;
 pub mod report_writer;
+pub mod transaction_loop;
+
+// #[cfg(feature = "web")]
+// pub mod web;
 
 pub use fixed_string::FixedString;
 pub use decimal::Decimal;
@@ -26,3 +32,6 @@ pub use sql::{SqlContext, Sqlca, SqlValue, SqlRow};
 pub use dli::{DliContext, DliFunc, PcbStatus, Segment, Ssa};
 pub use report_writer::{ReportContext, report_initiate, report_generate, report_terminate};
 pub use edited_numeric::format_edited;
+pub use vsam::{VsamStore, VsamOrganization};
+pub use bms::{BmsRegistry, BmsMapset, BmsMap, BmsField, ScreenOutput, ScreenInput};
+pub use transaction_loop::TransactionLoop;

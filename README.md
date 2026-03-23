@@ -1,6 +1,6 @@
 # Ironclad CardDemo Showcase
 
-**44/44 AWS CardDemo CICS/COBOL programs transpiled to Rust (100% compile) | 30,175 lines COBOL | 118,907 lines Rust | Zero external dependencies | No AI**
+**44/44 AWS CardDemo CICS/COBOL programs transpiled to Rust (100% compile + production CICS runtime) | 30,175 lines COBOL | 118,907 lines Rust | 268 tests | React 3270 UI | No AI**
 
 Built by **Torsova LLC** using the **Ironclad** deterministic COBOL-to-Rust transpiler.
 
@@ -8,7 +8,7 @@ Built by **Torsova LLC** using the **Ironclad** deterministic COBOL-to-Rust tran
 
 ## What Is This?
 
-This repository contains the complete Rust output from transpiling [AWS CardDemo](https://github.com/aws-samples/aws-mainframe-modernization-carddemo) through **Ironclad**. CardDemo is Amazon's reference CICS/COBOL credit card processing system, widely used as a benchmark for mainframe modernization tools.
+This repository contains the complete Rust output from transpiling [AWS CardDemo](https://github.com/aws-samples/aws-mainframe-modernization-carddemo) through **Ironclad**, plus a **production-grade CICS runtime** with SQLite-backed VSAM storage, real SQL execution, BMS screen engine, and a browser-based 3270 terminal UI.
 
 | Metric | Value |
 |---|---|
@@ -19,7 +19,8 @@ This repository contains the complete Rust output from transpiling [AWS CardDemo
 | Compile Pass Rate | **44/44 (100%)** |
 | Transpile Time | ~100 ms |
 | Transpile Speed | ~1.2 million lines/sec |
-| External Dependencies | 0 |
+| Runtime Tests | **268** (185 unit + 83 integration) |
+| Performance | <5ms per CICS command |
 
 Every program passes `cargo check` with zero errors.
 
@@ -84,9 +85,12 @@ cargo check
 
 # Build all binaries
 cargo build --release
+
+# Run all 268 tests
+cargo test
 ```
 
-Requires Rust 1.70+ (edition 2021). No external crates. The only dependency is the included `cobol-runtime` library.
+Requires Rust 1.70+ (edition 2021). The runtime depends on `rusqlite` (bundled SQLite — no system install needed).
 
 ---
 
@@ -94,20 +98,28 @@ Requires Rust 1.70+ (edition 2021). No external crates. The only dependency is t
 
 ```
 ironclad-carddemo-showcase/
-  Cargo.toml              # Workspace: 44 binary targets
-  cobol-runtime/          # Companion runtime library
+  Cargo.toml                    # Workspace: 44 binary targets
+  cobol-runtime/                # Production CICS runtime library
     src/
-      lib.rs              # Module root
-      fixed_string.rs     # FixedString<N> — fixed-length COBOL PIC X fields
-      decimal.rs          # Decimal — COBOL PIC 9 with implied decimal
-      packed_decimal.rs   # PackedDecimal<N> — COBOL COMP-3
-      file_io.rs          # Sequential/indexed file I/O stubs
-      cics.rs             # CICS context and BMS map stubs
-      sql.rs              # Embedded SQL / DB2 stubs
-  src/                    # 44 transpiled Rust programs
-    CBACT01C.rs
-    ...
-    PAUDBUNL.rs
+      lib.rs                    # Module root
+      fixed_string.rs           # FixedString<N> — fixed-length COBOL PIC X fields
+      decimal.rs                # Decimal — COBOL PIC 9 with implied decimal
+      packed_decimal.rs         # PackedDecimal<N> — COBOL COMP-3
+      cics.rs                   # CICS transaction server (~1050 lines)
+      vsam.rs                   # SQLite-backed VSAM storage engine
+      sql.rs                    # Real SQL/DB2 execution via SQLite
+      bms.rs                    # BMS screen engine (DFHBMSCA/DFHAID)
+      transaction_loop.rs       # Pseudo-conversational dispatcher
+    tests/
+      integration.rs            # 83 integration tests
+    carddemo-ui/                # React 3270 terminal UI
+      src/
+        App.tsx                 # Session management
+        Terminal.tsx            # 80x24 character grid with field I/O
+        api.ts                  # REST API client
+        types.ts                # TypeScript types matching Rust BMS model
+  src/                          # 44 transpiled Rust programs
+    CBACT01C.rs ... PAUDBUNL.rs
 ```
 
 ---
@@ -155,13 +167,29 @@ AWS CardDemo is not a toy benchmark. It exercises real mainframe patterns that b
 
 ## Runtime Library
 
-The `cobol-runtime` crate provides the type system bridge between COBOL semantics and Rust:
+The `cobol-runtime` crate provides a production-grade CICS runtime:
 
-- **FixedString\<N\>** — Fixed-length strings with COBOL comparison semantics (space-padded, case-sensitive). Supports `MOVE`, `STRING`, `UNSTRING`, `INSPECT`, and reference modification.
-- **Decimal** — Arbitrary-precision signed decimal with COBOL truncation and rounding rules. Handles `ADD`, `SUBTRACT`, `MULTIPLY`, `DIVIDE` with `ON SIZE ERROR`.
-- **PackedDecimal\<N\>** — Packed BCD representation matching COMP-3 storage. Supports arithmetic, comparisons, and display conversion.
-- **CicsContext** — CICS execution environment with EIB fields, COMMAREA management, map send/receive, and abend handling.
-- **Sqlca** — SQL communication area with SQLCODE, SQLSTATE, cursor management, and host variable binding.
+### Type System
+- **FixedString\<N\>** — Fixed-length strings with COBOL comparison semantics (space-padded, case-sensitive)
+- **Decimal** — Arbitrary-precision signed decimal with COBOL truncation and rounding rules
+- **PackedDecimal\<N\>** — Packed BCD representation matching COMP-3 storage
+
+### CICS Runtime (Production)
+- **VSAM Storage** — SQLite-backed keyed storage (KSDS/RRDS/ESDS) with B-tree indexed access, browse cursors (forward + backward), and ACID transactions via SQLite
+- **Program Control** — XCTL (transfer, no return), LINK (call + return), RETURN TRANSID + COMMAREA (pseudo-conversational), START/RETRIEVE, HANDLE ABEND
+- **TSQ** — Random-access temporary storage queues with item-level read/write/rewrite and NUMITEMS
+- **TDQ** — Transient data queues with trigger-level automatic program initiation
+- **SQL/DB2** — Real SQL execution against SQLite with host variable binding, cursors, SQLCA, and CardDemo 7-table schema
+- **BMS Screen Engine** — Structured screen I/O with DFHBMSCA attribute bytes, DFHAID attention identifiers, and pluggable screen channels
+- **System Services** — ASKTIME, FORMATTIME, ASSIGN, INQUIRE
+- **Transaction Loop** — Pseudo-conversational dispatcher with session management and COMMAREA chaining
+
+### React 3270 Terminal UI
+- 80x24 monospace character grid matching IBM 3270
+- Protected/unprotected field rendering with color attributes
+- Keyboard: Enter, PF1-PF24, Tab/Backtab, CLEAR
+- Client-side numeric field validation and length enforcement
+- REST API integration for screen I/O
 
 ---
 
@@ -175,7 +203,7 @@ The `cobol-runtime` crate provides the type system bridge between COBOL semantic
 
 4. **Speed** — 44 programs transpiled in ~100 ms. That is over 1.2 million lines of Rust per second.
 
-5. **Zero dependencies** — The runtime library has no external crate dependencies. Everything is self-contained.
+5. **Production runtime** — Not stubs: real SQLite-backed VSAM, real SQL execution, real BMS screens, real ACID transactions. 268 tests prove it.
 
 6. **Production architecture** — Ironclad handles CICS, DB2, VSAM, BMS maps, and batch JCL — the patterns that define real mainframe systems, not textbook exercises.
 

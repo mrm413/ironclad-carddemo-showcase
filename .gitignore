@@ -4,3 +4,7 @@ Cargo.lock
 *.swo
 *~
 .DS_Store
+cobol-runtime/carddemo-ui/node_modules/
+cobol-runtime/carddemo-ui/dist/
+*.db
+*.vsam.db

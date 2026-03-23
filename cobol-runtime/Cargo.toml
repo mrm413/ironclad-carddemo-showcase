@@ -1,8 +1,18 @@
 [package]
 name = "cobol-runtime"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Runtime types for Ironclad-generated Rust: FixedString, Decimal, PackedDecimal, FileStatus"
 authors = ["Torsova LLC"]
 
+[features]
+default = []
+# web = ["dep:tokio", "dep:axum", "dep:serde", "dep:serde_json"]
+
 [dependencies]
+rusqlite = { version = "0.31", features = ["bundled"] }
+# Web feature deps — uncomment when network available:
+# tokio = { version = "1", features = ["full"], optional = true }
+# axum = { version = "0.7", optional = true }
+# serde = { version = "1", features = ["derive"], optional = true }
+# serde_json = { version = "1", optional = true }
