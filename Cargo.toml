@@ -1,0 +1,186 @@
+[package]
+name = "carddemo-ironclad"
+version = "1.0.0"
+edition = "2021"
+description = "AWS CardDemo CICS/COBOL transpiled to Rust by Ironclad — 44/44 programs, 100% compile"
+authors = ["Torsova LLC"]
+license = "MIT"
+
+[dependencies]
+cobol-runtime = { path = "cobol-runtime" }
+
+[[bin]]
+name = "cbact01c"
+path = "src/CBACT01C.rs"
+
+[[bin]]
+name = "cbact02c"
+path = "src/CBACT02C.rs"
+
+[[bin]]
+name = "cbact03c"
+path = "src/CBACT03C.rs"
+
+[[bin]]
+name = "cbact04c"
+path = "src/CBACT04C.rs"
+
+[[bin]]
+name = "cbcus01c"
+path = "src/CBCUS01C.rs"
+
+[[bin]]
+name = "cbexport"
+path = "src/CBEXPORT.rs"
+
+[[bin]]
+name = "cbimport"
+path = "src/CBIMPORT.rs"
+
+[[bin]]
+name = "cbpaup0c"
+path = "src/CBPAUP0C.rs"
+
+[[bin]]
+name = "cbstm03a"
+path = "src/CBSTM03A.rs"
+
+[[bin]]
+name = "cbstm03b"
+path = "src/CBSTM03B.rs"
+
+[[bin]]
+name = "cbtrn01c"
+path = "src/CBTRN01C.rs"
+
+[[bin]]
+name = "cbtrn02c"
+path = "src/CBTRN02C.rs"
+
+[[bin]]
+name = "cbtrn03c"
+path = "src/CBTRN03C.rs"
+
+[[bin]]
+name = "coacct01"
+path = "src/COACCT01.rs"
+
+[[bin]]
+name = "coactupc"
+path = "src/COACTUPC.rs"
+
+[[bin]]
+name = "coactvwc"
+path = "src/COACTVWC.rs"
+
+[[bin]]
+name = "coadm01c"
+path = "src/COADM01C.rs"
+
+[[bin]]
+name = "cobil00c"
+path = "src/COBIL00C.rs"
+
+[[bin]]
+name = "cobswait"
+path = "src/COBSWAIT.rs"
+
+[[bin]]
+name = "cobtupdt"
+path = "src/COBTUPDT.rs"
+
+[[bin]]
+name = "cocrdlic"
+path = "src/COCRDLIC.rs"
+
+[[bin]]
+name = "cocrdslc"
+path = "src/COCRDSLC.rs"
+
+[[bin]]
+name = "cocrdupc"
+path = "src/COCRDUPC.rs"
+
+[[bin]]
+name = "codate01"
+path = "src/CODATE01.rs"
+
+[[bin]]
+name = "comen01c"
+path = "src/COMEN01C.rs"
+
+[[bin]]
+name = "copaua0c"
+path = "src/COPAUA0C.rs"
+
+[[bin]]
+name = "copaus0c"
+path = "src/COPAUS0C.rs"
+
+[[bin]]
+name = "copaus1c"
+path = "src/COPAUS1C.rs"
+
+[[bin]]
+name = "copaus2c"
+path = "src/COPAUS2C.rs"
+
+[[bin]]
+name = "corpt00c"
+path = "src/CORPT00C.rs"
+
+[[bin]]
+name = "cosgn00c"
+path = "src/COSGN00C.rs"
+
+[[bin]]
+name = "cotrn00c"
+path = "src/COTRN00C.rs"
+
+[[bin]]
+name = "cotrn01c"
+path = "src/COTRN01C.rs"
+
+[[bin]]
+name = "cotrn02c"
+path = "src/COTRN02C.rs"
+
+[[bin]]
+name = "cotrtlic"
+path = "src/COTRTLIC.rs"
+
+[[bin]]
+name = "cotrtupc"
+path = "src/COTRTUPC.rs"
+
+[[bin]]
+name = "cousr00c"
+path = "src/COUSR00C.rs"
+
+[[bin]]
+name = "cousr01c"
+path = "src/COUSR01C.rs"
+
+[[bin]]
+name = "cousr02c"
+path = "src/COUSR02C.rs"
+
+[[bin]]
+name = "cousr03c"
+path = "src/COUSR03C.rs"
+
+[[bin]]
+name = "csutldtc"
+path = "src/CSUTLDTC.rs"
+
+[[bin]]
+name = "dbunldgs"
+path = "src/DBUNLDGS.rs"
+
+[[bin]]
+name = "paudblod"
+path = "src/PAUDBLOD.rs"
+
+[[bin]]
+name = "paudbunl"
+path = "src/PAUDBUNL.rs"
