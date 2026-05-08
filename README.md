@@ -130,6 +130,55 @@ Requires Rust 1.70+ (edition 2021).
 
 ---
 
+## Reproducing the Batch Parity Result
+
+The `parity/` folder ships a self-contained Docker validator that runs both engines side by side on the 7 CardDemo batch programs and streams byte-for-byte results live with color tags.
+
+```bash
+# Build the validator image (one-time, ~3-5 min)
+docker build -t carddemo-parity -f parity/Dockerfile.parity .
+
+# Run with color (interactive TTY — green PASS / red MISMATCH ticks scroll past live)
+docker run --rm -it carddemo-parity
+
+# Filter to a single program
+docker run --rm -it carddemo-parity bash parity/parity_harness.sh --filter CBACT01C
+
+# Plain mode (no TTY, no color, still streams)
+docker run --rm carddemo-parity
+```
+
+What you'll see:
+
+```
+============================================================
+  Ironclad CardDemo Batch Parity Validator
+  GnuCOBOL  ←→  Ironclad-transpiled Rust   (byte-for-byte)
+============================================================
+  cobc:  cobc (GnuCOBOL) 3.1.2.0
+  rustc: rustc 1.82.0 (...)
+
+[run] 7 CardDemo batch programs selected
+------------------------------------------------------------
+[1/7] PASS             CBACT01C
+[2/7] PASS             CBACT02C
+[3/7] PASS             CBACT03C
+[4/7] PASS             CBCUS01C
+[5/7] PASS             CBTRN01C
+[6/7] MISMATCH         CBTRN02C
+[7/7] PASS             CBTRN03C
+
+============================================================
+  CARDDEMO BATCH PARITY SUMMARY
+============================================================
+  Parity rate:   85.7%  (6 / 7)  byte-for-byte
+============================================================
+```
+
+Exit codes: `0` = 100% parity, `1` = ≥1 MISMATCH, `2` = build failure, `3` = timeout.
+
+---
+
 ## Type Mapping
 
 | COBOL | Rust |

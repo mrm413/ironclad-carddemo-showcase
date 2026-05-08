@@ -1,0 +1,53 @@
+# =============================================================================
+#  Ironclad CardDemo Batch Parity Validator — Docker image
+# =============================================================================
+#  Runs both engines side-by-side on the 7 AWS CardDemo batch programs:
+#     GnuCOBOL  →  cobc -x -I copybooks  →  reference exe
+#     Ironclad  →  rustc on src/CB*.rs   →  transpiled exe
+#  Streams byte-for-byte parity results in real time with color tags.
+#
+#  Build (from the parent directory of this file):
+#     docker build -t carddemo-parity -f parity/Dockerfile.parity .
+#
+#  Run with color (interactive TTY):
+#     docker run --rm -it carddemo-parity
+#
+#  Run plain (no color, still streams):
+#     docker run --rm carddemo-parity
+#
+#  Filter to a single program:
+#     docker run --rm -it carddemo-parity bash parity/parity_harness.sh --filter CBACT01C
+#
+#  Exit codes:
+#     0 = 100% parity
+#     1 = at least one MISMATCH (logic divergence)
+#     2 = at least one BUILD_FAIL_RUST (transpiled output didn't compile)
+#     3 = TIMEOUT (one engine ran past timeout)
+# =============================================================================
+
+FROM rust:1.82-slim-bookworm
+
+# GnuCOBOL 3.x is the reference compiler; coreutils provides `timeout`
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        gnucobol \
+        coreutils \
+        ca-certificates \
+        build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /carddemo
+
+# Runtime library — pre-build so per-test rustc skips it
+COPY cobol-runtime/ cobol-runtime/
+RUN cd cobol-runtime && cargo build --release && cd ..
+
+# Transpiled Rust output (44 batch + online programs)
+COPY src/ src/
+
+# Parity bundle (COBOL source, copybooks, data, golden, harness)
+COPY parity/ parity/
+RUN chmod +x parity/parity_harness.sh
+
+# Default: run the 7-batch parity sweep, skipping runtime rebuild
+CMD ["bash", "parity/parity_harness.sh", "--no-build"]
