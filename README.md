@@ -27,23 +27,9 @@ Every program passes `cargo check` with zero errors.
 
 ---
 
-## Byte-for-Byte Parity (Where COBOL Reference Output Exists)
+## Byte-for-Byte Parity (Beta — Batch Programs)
 
-For the batch programs in CardDemo (CB*), GnuCOBOL gives us a side-by-side reference. The validator runs both engines on the same input data and diffs stdout + produced files **byte for byte**.
-
-| Program | Description | Stdout MATCH | Output File MATCH |
-|---|---|---|---|
-| CBACT01C | Batch account file processor | ✅ | ✅ |
-| CBACT02C | Batch account card cross-reference | ✅ | ✅ |
-| CBACT03C | Batch account card cross-reference (alt) | ✅ | ✅ |
-| CBCUS01C | Batch customer file processor | ✅ | ✅ |
-| CBTRN01C | Batch transaction file processor | ✅ | ✅ |
-| CBTRN02C | Batch transaction category balance | (¹) | (¹) |
-| CBTRN03C | Batch transaction report generator | ✅ | ✅ |
-
-**6 / 7 batch programs match byte-for-byte on stdout and on file output.**
-
-(¹) **CBTRN02C** has a small documented difference in TCATBAL ("transaction category balance") record-not-found handling — Ironclad creates the missing TCATBAL records and rejects 5 fewer transactions than the GnuCOBOL reference. The packed-decimal sign nibbles in the rejected-transactions file (`DALYREJS`) also differ by encoding. Both behaviors are within the documented CardDemo spec; the difference is a TCATBAL initialization choice, not a numerical or logic divergence. Detail is in `parity_results/CBTRN02C_NOTE.md`.
+The `parity/` folder ships a Docker validator that compiles the 7 CardDemo batch programs (CB*) with both GnuCOBOL and the Ironclad-generated Rust, runs both with the same input data, and diffs stdout byte for byte. Reproducing the full byte-for-byte parity claim requires the same DD-name file staging the production CardDemo batch JCL does; the included validator gets you most of the way but a few programs still need additional fixture wiring before they produce green ticks under the included Docker harness alone.
 
 The 30 online (CO*) programs aren't run via GnuCOBOL — they require a CICS environment. The runtime tests below cover them via the embedded CICS runtime.
 
@@ -130,52 +116,24 @@ Requires Rust 1.70+ (edition 2021).
 
 ---
 
-## Reproducing the Batch Parity Result
+## Running the Batch Parity Validator (Beta)
 
-The `parity/` folder ships a self-contained Docker validator that runs both engines side by side on the 7 CardDemo batch programs and streams byte-for-byte results live with color tags.
+The `parity/` folder ships a Docker harness for the 7 batch programs. It streams color-coded results live (green PASS / red MISMATCH / yellow BUILD_FAIL_GNU / cyan TIMEOUT) so you can watch the validator chew through the corpus. Reproducing 100% green-tick parity from this harness alone is still in progress (some programs need extra DD-name fixture wiring), but the plumbing is in place.
 
 ```bash
 # Build the validator image (one-time, ~3-5 min)
 docker build -t carddemo-parity -f parity/Dockerfile.parity .
 
-# Run with color (interactive TTY — green PASS / red MISMATCH ticks scroll past live)
+# Run with color (interactive TTY)
 docker run --rm -it carddemo-parity
 
 # Filter to a single program
 docker run --rm -it carddemo-parity bash parity/parity_harness.sh --filter CBACT01C
-
-# Plain mode (no TTY, no color, still streams)
-docker run --rm carddemo-parity
-```
-
-What you'll see:
-
-```
-============================================================
-  Ironclad CardDemo Batch Parity Validator
-  GnuCOBOL  ←→  Ironclad-transpiled Rust   (byte-for-byte)
-============================================================
-  cobc:  cobc (GnuCOBOL) 3.1.2.0
-  rustc: rustc 1.82.0 (...)
-
-[run] 7 CardDemo batch programs selected
-------------------------------------------------------------
-[1/7] PASS             CBACT01C
-[2/7] PASS             CBACT02C
-[3/7] PASS             CBACT03C
-[4/7] PASS             CBCUS01C
-[5/7] PASS             CBTRN01C
-[6/7] MISMATCH         CBTRN02C
-[7/7] PASS             CBTRN03C
-
-============================================================
-  CARDDEMO BATCH PARITY SUMMARY
-============================================================
-  Parity rate:   85.7%  (6 / 7)  byte-for-byte
-============================================================
 ```
 
 Exit codes: `0` = 100% parity, `1` = ≥1 MISMATCH, `2` = build failure, `3` = timeout.
+
+For the full validated **44/44 compile + 268-test** result, see the `cargo check` / `cargo test` commands above — those are the headline numbers that actually pass cleanly today.
 
 ---
 
